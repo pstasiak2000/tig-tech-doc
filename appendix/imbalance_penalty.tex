@@ -1,0 +1,278 @@
+\section{Imbalance penalty}
+
+
+\subsection{Relative variance}
+\label{app:relative-variance}
+
+Given a set of factors $f_i\in[0,1]$ with corresponding weights $w_i \geq 0$ such that $\sum_i w_i = 1$, the weighted mean and variance are determined by
+\begin{align}
+    \mu &= \sum w_i f_i\\
+    \sigma^2 &= \sum w_i (f_i - \mu)^2
+\end{align}
+In Sec.~\ref{sec:influence}, we defined the imbalance $S$ as the spread of factors 
+\begin{equation}
+    S = \frac{\sigma^2}{\mu(1 - \mu)}
+\end{equation}
+In this subsection we will motivate the use of the equation above, often referred to as the bounded variance, to measure the spread of factors.
+
+Suppose that instead, we use the relative variance $S_{CV}$ to define the spread, such that  
+\begin{equation}
+    S_{CV} = \frac{CV^2}{n - 1}
+\end{equation}
+where $CV = \sigma/\mu$ is the coefficient of variation with $n-1$ degrees of freedom. 
+The relationship between $S$ and the relative variance is given by 
+\begin{equation}
+    S = S_{CV}\frac{(n-1)\mu}{1 - \mu}
+\end{equation}
+The difference between the two equations becomes immediately clear when we consider a concrete example.
+Consider a set of 4 equally weighted factors, if we compute $S_{CV}$ and $S$ we find that 
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|cc}
+         Factors & $S_{CV}$ & $S$  \\
+         \hline
+         (0.04,0,0,0) & 1 & 0.0303 \\
+         (0,40,0,0,0) & 1 & 0.3333 \\
+         (1.00,0.0.0) & 1 & 1
+    \end{tabular}
+    \label{tab:imbalance-factor-weighting}
+\end{table}
+Relative variance fails to capture the imbalance of the factors relative to the mean.
+Across all three sets, the factors would suffer a maximum penalty under relative variance, even though the parity is much better for the first set compared to the last.
+As a result, the calculation of $S$ makes it much easier for smaller participants who might have a smaller share of influence to be involved, as the penalty is balanced with respect to participation. 
+Smaller participants suffer smaller consequences for specialisation while larger players are expected to diversify. 
+The reason behind this is simple: a smaller participant may not have the sufficient compute to diversify across many challenges. 
+Additionally, a small participant will not be able to manipulate the network share through specialisation and as a result does not carry a material risk of market manipulation. 
+
+Both $S_{CV}$ and $S$ lie within the $[0,1]$ under equal weighting. The bounded-variance measure $S$ retains this bound even under unequal weights resulting from the fact that $\sigma^2 \leq \mu(1-\mu)$ is a tight bound~\cite{bhatia2000better}.  
+
+
+\subsection{Imbalance penalty}
+\label{app:imbalance-penalty}
+The imbalance penalty is an important mechanic to ensure fairness, and to prevent the domination of a singular Benchmarker in one challenge.
+The key consideration that we address here is the choice of the security parameter $k$, which dictates the severity of the imbalance $S^i$ for a Benchmarker $i$. 
+
+Let's suppose that for a given block, we want to directly capture the effect of shifting the value of $k$ on a Benchmarker's influence.
+Let $Z(k) = \sum_{j}\mathcal{I}^j$ be the normalisation factor of a Benchmarker $i$'s influence, such that $\mathcal{J}^i = \mathcal{I}^i/Z(k)$ and suppose that $Z(k), \mu^i > 0$.
+Taking logarithms, we find that 
+\begin{equation}
+    \log\mathcal{J}^i = \log\mu^i - kS^i - \log Z(k)
+\end{equation}
+and then differentiating with respect to parameter $k$ gives
+\begin{equation}
+    \frac{d\log\mathcal{J}^i}{d k} = - \frac{Z'(k)}{Z(k)} - S^i
+\end{equation}
+where $Z'(k)$ represents a derivative with respect to $k$.
+In fact, we can show that 
+\begin{equation}
+    Z'(k) = \frac{d}{dk}\left(\sum_j \mu^i e^{-kS^j}\right) = - \sum_j (\mu^j e^{-kS^j})S^j = - \sum_j \mathcal{I}^j S^j = -Z(k) \sum_j \mathcal{J}^j S^j
+\end{equation}
+We define the influence-weighted average imbalance $\bar{S}_{\mathcal{J}} = \sum_j \mathcal{J}^j S^j$ since $\mathcal{J}^i$ represent the normalized influence weights which sum to 1. 
+Substituting, the relative effect of the Benchmarker $i$'s influence due to $k$ is given by an elegant equation
+\begin{equation}
+    \frac{d\log\mathcal{J}^i}{dk} = \bar{S}_{\mathcal{J}} - S^i
+    \label{eq:influence-rate-k}
+\end{equation}
+From the result above, it is clear how a Benchmarker's influence is sensitive to a change in the value of $k$. For a Benchmarker with a high parity (and therefore a small $S^i$) will have $S^i \leq \bar{S}_{\mathcal{J}}$, and as a result an increase in $k$ should positively affect the Benchmarker's influence, proportional to the deviation from the mean. 
+In the opposite direction: a Benchmarker that does not balance their factors well will be negatively affected by an increase in the value of $k$.
+If a Benchmarker $i$ has an imbalance penalty $S^i \approx \bar{S}_{\mathcal{J}}$, an instanteneous change in $k$ will not affect the Benchmarker's influence in any significant way. 
+It is interesting to note that the imbalance penalty only remains effective as long as the distribution of the $S^i$ values has a sufficiently large variance.
+Ideally for the protocol, the distribution of the imbalance $S^i$ should be such that for each Benchmarker $i$, we minimize Eqn.~\ref{eq:influence-rate-k} and therefore minimize the impact of an imbalance penalty.
+However this on its own is an insufficient condition to ensure parity.
+If there are 4 Benchmarkers and 4 Challenges, and each Benchmarker focused on 1 challenge, $\bar{S}_{\mathcal{J}} = S^i$ for all $i$ and the imbalance penalty is ineffective, and there is no competition within the challenge to drive innovation.  
+
+It should be noted that in Eqn.~\ref{eq:influence-rate-k}, the change in $\mathcal{J}^i$ is only a sensitivity guideline, and it does not imply that for a larger deviation in $k$ the same Benchmarker will continue to either gain or lose influence. 
+The influence-weighted average imbalance $\bar{S}_{\mathcal{J}}$ will vary with $k$, and more importantly the equation does not take into account how the influence of one Benchmarker $i$ is affected by a change of factors by another Benchmarker $j$. 
+In general, the instantaneous influence shift due to a change in the parameter $k$ is given by 
+\begin{equation}
+    \mathcal{J}^i(k + \Delta k) = \frac{\mathcal{J}^i(k) e^{-\Delta k S^i}}{\sum_j \mathcal{J}^j(k)e^{-\Delta k S_j}}
+\end{equation}
+
+\subsection{Plausible $k$ range}
+
+In an idealised TIG model, the amount of compute which is expended by the Benchmarkers results in an equal share of Challenge factors spread across the challenges for each Challenge.
+The security parameter $k$ sets a precedent on how much a Benchmark is penalised by being out of parity.
+If the value of $k$ is small, a Benchmarker $i$ may no longer be incentivized to return to parity, on the grounds that forcing compute into a particular challenge will be more profitable than balancing compute across different challenges. 
+Without a sufficient driving factor behind penalisation, there is no incentive for a Benchmarker to interact with a particular challenge if the compute will not lead to a substantial increase in reward.  
+
+For example, consider a Benchmarker $i$ who does not have access to a GPU. 
+For a sufficiently large $k$, the Benchmarker would incur a large penalty based on not being able to interact with the GPU-based challenges. 
+It therefore may be more profitable for the Benchmarker to invest or rent a GPU machine to partake in the GPU-challenges and therefore earn much higher rewards.
+
+There is another motivation behind having a sufficiently large value of $k$.
+Suppose that $k$ is very small; a Benchmarker $i$ may intentionally force themselves out of parity in order to gain rewards from another source.
+For example, if Benchmarker $i$ decides to submit an algorithm $k$ which may or may not offer a substantial increase to the average bundle quality, they could in theory attempt to funnel all of their compute into this one challenge, and thus earn the adoption rewards from Benchmarking their own algorithms.
+
+The question remains, whether there is some incentive in order to cap the value of $k$ at some larger value. 
+If the penalty is large enough, a large Benchmarker could drive an excessive fraction of the total cost into a specific challenge.
+Even though a Benchmarker is penalised more heavily through a deviation from parity, they can also push the other Benchmarkers out of parity by pushing more compute into one challenge.
+The outcome of this, is that it can become more favourable for a large Benchmarker to drive a higher compute disparity.
+In this section, we will show that the turning point at which\textbf{c} a change in one of the challenge factors is no longer detrimental or beneficial, depending on the increment. 
+
+\subsubsection{Change in Influence}
+
+The derivative of the normalised Benchmarker $i$'s influence $\mathcal{J}^i$ with respect to the change in factor $f^j_x$ is given by
+\begin{equation}
+    \sd{\mathcal{J}^i}{f^j_x} = \sum_{a,b,q,y,z} \pd{\mathcal{J}^i}{\mathcal{I}^a} \pd{\mathcal{I}^a}{\hat{f}_z^b} \pd{\hat{f}_z^b}{f^q_y} \sd{f^q_y}{f^j_x}
+\end{equation}
+subject to the condition that Benchmarker $j$'s total cost $C^j = \sum_z g^j_z f^j_z$ is held constant, where $g^j_z$ is the unit cost for factor $f^j_z$. 
+We now suppose that for Benchmarker $j$, we adjust the value of $f$'s in such a way that the their total cost remains the same. 
+This in practise is done by removing compute from one Challenge and inserting it into another. 
+Therefore the total rate of change with respect to factor $f_x$ is given by 
+\begin{equation}
+    0 = \sd{}{f_x}\sum_z g_z f_z = \sum_z g_z \sd{f_z}{f_x} = g_x + \sum_{z\neq x} g_z \sd{f_z}{f_x},
+    \label{eq:appendix/cost-derivative}
+\end{equation}
+where we have dropped the $j$ notation for the Benchmarker. 
+Consider now that the Benchmarker increments $c_x = g_x f_x$ by incrementing $f_x$, and that the corresponding changes in $c_{z\neq x}$ are proportional. 
+Then it follows that 
+\begin{equation}
+    \sd{c_z}{c_x} = \sd{(g_z f_z)}{(g_x f_x)} = -q c_z, \quad z \neq x
+\end{equation}
+where $q$ is a constant of proportionality to be determined. 
+From the above, we find that
+\begin{equation}
+    g_z \sd{f_z}{f_x} = -q g_x g_z f_z,
+\end{equation}
+and substituting into Eqn.~\ref{eq:appendix/cost-derivative} gives the value of $q$:
+\begin{equation}
+    q = \frac{1}{\sum_{z\neq x} g_z f_z}.
+\end{equation}
+Therefore, we find that the derivative is determined by
+\begin{equation}
+    \sd{f_z}{f_x} = - \frac{g_x f_z}{\sum_{v \neq x} g_v f_v}, \quad z \neq x
+\end{equation}
+For a general Challenge $y$, the change of one factor with respect to another is given by 
+\begin{align}
+    \sd{f_y}{f_x} &= \pd{f_y}{f_x} + \sum_{v \neq x} \pd{f_y}{f_v} \sd{f_v}{f_x} \\
+    &= \delta_{xy} + \sum_{v\neq x} \delta_{yv} \sd{f_v}{f_x} \\ 
+    &= \delta_{xy} + \sum_z \bar{\delta}_{xv}\delta_{yv}\pd{f_z}{f_x}
+\end{align}
+where $\delta_{xy}$ is the Kronecker delta function, and $\bar{\delta}_{xy} = 1 - \delta_{xy}$. 
+Simplifying, we can show that 
+\begin{equation}
+    \label{eq:appendix/deriv_fy_fx}
+    \sd{f_y}{f_x} = \delta_{xy} - \bar{\delta}_{xy} \frac{g_x f_y}{\sum_{v \neq x} g_v f_v}.
+\end{equation}
+We can now begin with computing the change in influence of Benchmarker $i$. Firstly, we split the derivative using one chain rule definition, which gives
+\begin{equation}
+    \sd{\mathcal{J}^i}{f_x^j} = \sum_{q,y} \pd{\mathcal{J}^i}{f_y^q} \sd{f_y^q}{f_x^j} = \sum_{q,y} \pd{\mathcal{J}i}{f_y^q}\left(\delta_{qj} \sd{f_y^j}{f_x^j}\right)
+\end{equation}
+Directly subsituting Eqn.~\ref{eq:appendix/deriv_fy_fx} into the equation above and applying the Kronecker delta we can obtain
+\begin{equation}
+\sd{\mathcal{J}^i}{f_x^j} = \sum_y \pd{\mathcal{J}^i}{f_y^j}\left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_y}{\sum_{v\neq x} g^j_v f^j_v}\right)
+\end{equation}
+The remaining partial derivative can be further expanded by a second use of the chain rule in terms of the normalised challenge factors $\hat{f}_x^j$, such that 
+\begin{equation}
+    \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y}\pd{\hat{f}^a_y}{f^j_y} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_y}{\sum_{v\neq x} g^j_v f^j_v}\right)
+    \label{eq:appendix/influence-deriv-1}
+\end{equation}
+To progress further we neglect the Legacy multiplier factor, which here we set to 1 for all tracks and challenges, and assume a uniform weighting across all challenge factors. 
+As a result, the normalised challenge factors can be written in the simple form 
+\begin{equation}
+    \hat{f}^i_x = \frac{f^i_x}{\sum_j f^j_x}.
+\end{equation}
+Now differentiating the above with respect to challenge factor $f^j_x$, we find that 
+\begin{equation}
+    \pd{\hat{f}^i_x}{f^j_x} = \frac{\delta_{ij}}{\sum_k f^k_x} + f^i_x \pd{}{f^j_x}\left(\frac{1}{\sum_k f^k_x}\right) = \frac{\delta_{ij}}{\sum_k f^k_x} - \frac{f^i_x / \sum_k f^k_x}{\sum_k f^k_x} = \frac{\delta_{ij} - \hat{f}^i_x}{\sum_k f^k_x}.
+\end{equation}
+Now substituting the result above into Eqn.~\ref{eq:appendix/influence-deriv-1} results in the following:
+\begin{equation}
+    \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj} - \hat{f}^a_y}{\sum_k f^k_y} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_y}{\sum_{v\neq x} g^j_v f^j_v}\right)
+\end{equation}
+We now make a number of subtle manipulations.
+Firstly, multiply the equation above by $\sum_k f^k_x$, to obtain
+\begin{equation}
+    \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj} - \hat{f}^a_y}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_y}{\sum_{v\neq x} g^j_v f^j_v}\right) \frac{\sum_k f^k_x}{\sum_k f^k_y}. 
+    \label{eq:appendix/influence-deriv-2}
+\end{equation}
+From the definitions of the normalised challenge factors, we can show that 
+\begin{equation}
+    \frac{\sum_k f^k_x}{\sum_k f^k_y} = \frac{f^j_x/\hat{f}^j_x}{f^j_y/\hat{f}^j_y} = \frac{\hat{f}^j_y}{\hat{f}^j_x} \frac{f^j_x}{f^j_y}
+\end{equation}
+Substituting the above into Eqn.~\ref{eq:appendix/influence-deriv-2} gives 
+\begin{equation}
+    \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj} - \hat{f}^a_y}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_x}{\sum_{v\neq x} g^j_v f^j_v} \frac{\hat{f}^j_y}{\hat{f}^j_x}\right).  
+\end{equation}
+Note here that multiplying $\sum_k f^k_x / \sum_k f^k_y$ factor by the Kronecker delta simply leads to the cancellation of the factor, as this is a unitary operation under summation. 
+Once more applying the chain rule to the partial derivative that is left, we obtain:
+\begin{align}
+	\nonumber \sd{\J^i}{f^j_x} &= \frac{1}{\sum_k f^k_x} \sum_{a,y} \delta_{ai} \pd{\J^i}{\I^a}\pd{\I^a}{\f^a}(\delta_{aj} - \f^a_y)\left[\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x}c^j_v} \frac{\f^j_y}{\f^j_x} \right]\\
+							   &= \frac{1}{\sum_k f^k_x} \pd{\J^i}{\I^i}\left\lbrace  \sum_{y} \pd{\I^i}{\f^i_y}(\delta_{ij} - \f^i_y)\left[\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x}c^j_v} \frac{\f^j_y}{\f^j_x}\right] \right\rbrace
+\end{align}
+We now focus on the summation term over Challenges $y$, and splitting this into the contributions where $y=x$ and $y \neq x$, such that 
+\begin{equation}
+	\pd{\I^i}{\f^i_x}(\delta_{ij} - \f^i_x) + \sum_{y \neq x} \pd{\I^i}{\f^i_y}(\delta_{ij} - \f^i_y)\left( \delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{(n-1)\langle c^j_{y\neq x}\rangle} \frac{\f^j_y}{\f^j_x} \right)
+\end{equation}
+where we have used the notation $\langle c^j_{y \neq x}\rangle = \frac{1}{n-1} \sum_{y \neq x} c^j_y$ to denote the average cost of obtaining the challenge factors different from Challenge $x$. 
+Now suppose that Benchmarker $j$ is near $\f^j$-parity, such that a single factor at Challenge $x$ is moved away from parity, with the rest remaining the same. 
+Additionally, we assume that the rate of change of the unnormalised influence $\I^i$ with respect to the challenge factors is the same for all Challenges different from $x$ near $\f^j$-parity.
+Therefore we can simplify the sum in the following way:
+\begin{equation}
+	(\delta_{ij} - \f^i_x)\pd{\I^i}{\f^i_x} - \frac{c^j_x}{(n-1) \langle c^j_{y \neq x}\rangle} \frac{\f^j_{y \neq x}}{\f^j_x} \pd{\I^i}{\f^i_{y \neq x}} \sum_{y \neq x} (\delta_{ij} - \f^i_y)
+\end{equation}
+Finally, putting it all together and simplifying we arrive at the general derivative result
+\begin{equation}
+	\sd{\J^i}{f^j_x} = \frac{1}{\sum_k f^k_x} \frac{\f^j_{y \neq x}}{\langle c^j_{y \neq x}\rangle } \pd{\J^i}{\I^i}\left[(\delta_{ij} - \f^i_x) \frac{\langle c^j_{y \neq x} \rangle}{\f^j_{y \neq x}} \pd{\I^i}{\f^i_x} - (\delta_{ij} - \f^i_{y \neq x}) \frac{c^j_x}{\f^j_x} \pd{\I^i}{\f^i_{y \neq x}} \right]
+\end{equation}
+Under the assumption that here $i = j$, it immediately follows that:
+\begin{equation}
+	\sd{\J^i}{f^i_x} = \frac{1}{\sum_k f^k_x} \pd{\J^i}{\I^i}\left[(1 - \f^i_x) \pd{\I^i}{\f^i_x} - (1 - \f^i_{y \neq x}) \frac{c^i_x}{\f^i_x} \frac{\f^i_{y \neq x}}{\langle c^i_{y \neq x}\rangle } \pd{\I^i}{\f^i_{y \neq x}} \right]
+\end{equation}
+We can make a further simplification that
+\begin{equation}
+	\frac{c^i_x}{\hat{f}^i_x} = g^i_x \sum_k f^ := h^i_x	
+\end{equation}
+for both $y=x$ and $y\neq x$ cases (with the latter of course, only holding if the unit costs for all of the $y \neq x$ Challenges .
+Interestingly, $h^i_x$ is a measure of the total cost that a Benchmarker $i$ would have to expend in order to obtain a Challenge factor of unity for Challenge $x$.
+The derivative re-expressed in terms of these quantities is then
+\begin{equation}
+	\sd{\J^i}{f^i_x} = \frac{1}{\sum_k f^k_x} \pd{\J^i}{\I^i}\left[(1 - \f^i_x) \pd{\I^i}{\f^i_x} - (1 - \f^i_{y \neq x}) \frac{h^i_x}{h^i_{y \neq x}} \pd{\I^i}{\f^i_{y \neq x}} \right]
+\end{equation}
+The point at which a change in $f^i_x$ switches from having a beneficial to detrimental effect (or vice versa) on the influence is given by the non-trivial stationary point of the derivative $d \mathcal{J}^i/ d f^i_x$.
+The trivial stationary point is obtained by computing
+\begin{equation}
+\pd{\J^i}{\I^j} = \pd{}{\I^j} \left( \frac{\I^i}{\sum_k \I^k} \right) = \pd{\I^i}{\I^j} \frac{1}{\sum_k \I^k} + \I^i \pd{}{\I^j}\left(\frac{1}{\sum_k \I^k}\right) = \frac{\delta_{ij} - \J^i}{\sum_k \I^k}  
+\end{equation}
+The above holds for $\J^i = 1$ for Benchmarker $i = j$ and $\J^i = 0$ when $i \neq j$.  
+To find the non-trivial stationary point, we set to zero the contents of the square brackets, in order to show that 
+\begin{equation}
+	\frac{h_x}{h_{y \neq x}} = \frac{1 - \f_x}{1 - \f_{y \neq x}} \frac{\partial \I / \partial \f_x}{\partial \I / \partial \f_{y \neq x}}
+\end{equation}
+
+
+
+
+% \begin{equation}
+%     \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj} - \hat{f}^a_y}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right).
+%     \label{eq:appendix/influence-deriv-3}
+% \end{equation}
+% where $c^j_x$ represents the cost of obtaining challenge factor $f^j_x$ as before. 
+% Furthermore, we can decompose the remaining partial derivative using the chain rule such that 
+% \begin{equation}
+%     \pd{\mathcal{J}^i}{\hat{f}^a_y} = \sum_v \pd{\mathcal{J}^i}{\mathcal{I}^v} \pd{\mathcal{I}^v}{\hat{f}^a_y} = \sum_v \delta_{av} \pd{\mathcal{J}^i}{\mathcal{I}^v} \pd{\mathcal{I}^v}{\hat{f}^v_y} = \pd{\mathcal{J}^i}{\mathcal{I}^a} \pd{\I^a}{\f^a_y}
+% \end{equation}
+% In the above, we inserted $\partial\I^v/\partial\f^a_y = \delta_{av} \partial \I^v / \partial \f^v_y$. 
+% This holds, since the influence factor $\I^v$ is a function of $\f^v_x$ only, and not other $\f^w_x$ where $v\neq w$. 
+
+
+% To simplify further we claim that the first term of Eqn.~\ref{eq:appendix/influence-deriv-3} is much larger than the second term, i.e
+% \begin{equation}
+%     \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj}}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right) \gg \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\hat{f}^a_y}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right)
+% \end{equation}
+% We will prove this claim in Sec.???. 
+% Therefore, we approximate the derivative as
+% \begin{align}
+%     \nonumber \sd{\J^i}{f^j_x} &\approx \sum_{a,y} \pd{\J^i}{\I^a} \pd{\I^a}{\f^a_y} \frac{\delta_{ay}}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right) \\
+%    \nonumber  &= \sum_y \frac{1}{\sum_k f^k_x} \pd{\J^i}{\I^j}\pd{I^j}{\f^j_y}\left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right) \\
+%     &= \frac{1}{\sum_k f^s_k} \pd{\J^i}{\I^j}\left(\pd{\I^j}{\f^j_x} - \sum_{y \neq x} \pd{\I^j}{\f^j_y} \frac{c^j_x}{\sum_{v\neq x c^j_v}}\right).
+% \end{align}
+% At parity, we know that all of the $\partial \I^j / \partial \f^j_y$ terms are equal, and so
+% \begin{equation}
+%     \sd{\J^i}{f^j_x} \approx \frac{1}{\sum_k f^s_k} \pd{\J^i}{\I^j}\left(\pd{\I^j}{\f^j_x} - (n-1)\pd{\I^j}{\f^j_{y\neq x}} \frac{c^j_x}{\sum_{v\neq x c^j_v}}\right).
+% \end{equation}
+% Finally, we can obtain
+% \begin{equation}
+%     \sd{\J^i}{f^j_x} \approx \frac{1}{\langle c^j_{y\neq x}\rangle \sum_k f^s_k} \pd{\J^i}{\I^j}\left( \langle c^j_{y\neq x}\rangle \pd{\I^j}{\f^j_x} - c^j_x \pd{\I^j}{\f^j_{y\neq x}}\right).
+% \end{equation}
+% where we have defined $\langle c^j_{y\neq x}\rangle = \frac{1}{n-1}\sum_{y \neq x} c_y$ for a Benchmarker at $\f^j$-parity. 
