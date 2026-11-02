@@ -239,40 +239,11 @@ To find the non-trivial stationary point, we set to zero the contents of the squ
 \begin{equation}
 	\frac{h_x}{h_{y \neq x}} = \frac{1 - \f_x}{1 - \f_{y \neq x}} \frac{\partial \I / \partial \f_x}{\partial \I / \partial \f_{y \neq x}}
 \end{equation}
+where we have dropped the $i$ notation denoting Benchmarker $i$. 
+Defining $p_x = h_x / ( 1 - \f_x)$ as the cost of one extra unit of share in challenge $x$, we arrive at showing
+\begin{equation}
+	\frac{\partial \log \I / \partial \f_x}{p_x} = \frac{\partial \log \I / \partial \f_{y \neq x}}{p_{y \neq x}}
+\end{equation}
 
 
 
-
-% \begin{equation}
-%     \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj} - \hat{f}^a_y}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right).
-%     \label{eq:appendix/influence-deriv-3}
-% \end{equation}
-% where $c^j_x$ represents the cost of obtaining challenge factor $f^j_x$ as before. 
-% Furthermore, we can decompose the remaining partial derivative using the chain rule such that 
-% \begin{equation}
-%     \pd{\mathcal{J}^i}{\hat{f}^a_y} = \sum_v \pd{\mathcal{J}^i}{\mathcal{I}^v} \pd{\mathcal{I}^v}{\hat{f}^a_y} = \sum_v \delta_{av} \pd{\mathcal{J}^i}{\mathcal{I}^v} \pd{\mathcal{I}^v}{\hat{f}^v_y} = \pd{\mathcal{J}^i}{\mathcal{I}^a} \pd{\I^a}{\f^a_y}
-% \end{equation}
-% In the above, we inserted $\partial\I^v/\partial\f^a_y = \delta_{av} \partial \I^v / \partial \f^v_y$. 
-% This holds, since the influence factor $\I^v$ is a function of $\f^v_x$ only, and not other $\f^w_x$ where $v\neq w$. 
-
-
-% To simplify further we claim that the first term of Eqn.~\ref{eq:appendix/influence-deriv-3} is much larger than the second term, i.e
-% \begin{equation}
-%     \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj}}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right) \gg \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\hat{f}^a_y}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right)
-% \end{equation}
-% We will prove this claim in Sec.???. 
-% Therefore, we approximate the derivative as
-% \begin{align}
-%     \nonumber \sd{\J^i}{f^j_x} &\approx \sum_{a,y} \pd{\J^i}{\I^a} \pd{\I^a}{\f^a_y} \frac{\delta_{ay}}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right) \\
-%    \nonumber  &= \sum_y \frac{1}{\sum_k f^k_x} \pd{\J^i}{\I^j}\pd{I^j}{\f^j_y}\left(\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x} c^j_v}\right) \\
-%     &= \frac{1}{\sum_k f^s_k} \pd{\J^i}{\I^j}\left(\pd{\I^j}{\f^j_x} - \sum_{y \neq x} \pd{\I^j}{\f^j_y} \frac{c^j_x}{\sum_{v\neq x c^j_v}}\right).
-% \end{align}
-% At parity, we know that all of the $\partial \I^j / \partial \f^j_y$ terms are equal, and so
-% \begin{equation}
-%     \sd{\J^i}{f^j_x} \approx \frac{1}{\sum_k f^s_k} \pd{\J^i}{\I^j}\left(\pd{\I^j}{\f^j_x} - (n-1)\pd{\I^j}{\f^j_{y\neq x}} \frac{c^j_x}{\sum_{v\neq x c^j_v}}\right).
-% \end{equation}
-% Finally, we can obtain
-% \begin{equation}
-%     \sd{\J^i}{f^j_x} \approx \frac{1}{\langle c^j_{y\neq x}\rangle \sum_k f^s_k} \pd{\J^i}{\I^j}\left( \langle c^j_{y\neq x}\rangle \pd{\I^j}{\f^j_x} - c^j_x \pd{\I^j}{\f^j_{y\neq x}}\right).
-% \end{equation}
-% where we have defined $\langle c^j_{y\neq x}\rangle = \frac{1}{n-1}\sum_{y \neq x} c_y$ for a Benchmarker at $\f^j$-parity. 
