@@ -88,7 +88,7 @@ In general, the instantaneous influence shift due to a change in the parameter $
     \mathcal{J}^i(k + \Delta k) = \frac{\mathcal{J}^i(k) e^{-\Delta k S^i}}{\sum_j \mathcal{J}^j(k)e^{-\Delta k S_j}}
 \end{equation}
 
-\subsection{Plausible $k$ range}
+\subsection{Imbalance penalty and market domination}
 
 In an idealised TIG model, the amount of compute which is expended by the Benchmarkers results in an equal share of Challenge factors spread across the challenges for each Challenge.
 The security parameter $k$ sets a precedent on how much a Benchmark is penalised by being out of parity.
@@ -109,7 +109,7 @@ Even though a Benchmarker is penalised more heavily through a deviation from par
 The outcome of this, is that it can become more favourable for a large Benchmarker to drive a higher compute disparity.
 In this section, we will show that the turning point at which\textbf{c} a change in one of the challenge factors is no longer detrimental or beneficial, depending on the increment. 
 
-\subsubsection{Change in Influence}
+\subsubsection{Benchmarker's influence gradient}
 
 The derivative of the normalised Benchmarker $i$'s influence $\mathcal{J}^i$ with respect to the change in factor $f^j_x$ is given by
 \begin{equation}
@@ -228,6 +228,7 @@ Interestingly, $h^i_x$ is a measure of the total cost that a Benchmarker $i$ wou
 The derivative re-expressed in terms of these quantities is then
 \begin{equation}
 	\sd{\J^i}{f^i_x} = \frac{1}{\sum_k f^k_x} \pd{\J^i}{\I^i}\left[(1 - \f^i_x) \pd{\I^i}{\f^i_x} - (1 - \f^i_{y \neq x}) \frac{h^i_x}{h^i_{y \neq x}} \pd{\I^i}{\f^i_{y \neq x}} \right]
+	\label{eq:appendix/final-influence-derivative}
 \end{equation}
 The point at which a change in $f^i_x$ switches from having a beneficial to detrimental effect (or vice versa) on the influence is given by the non-trivial stationary point of the derivative $d \mathcal{J}^i/ d f^i_x$.
 The trivial stationary point is obtained by computing
@@ -244,6 +245,42 @@ Defining $p_x = h_x / ( 1 - \f_x)$ as the cost of one extra unit of share in cha
 \begin{equation}
 	\frac{\partial \log \I / \partial \f_x}{p_x} = \frac{\partial \log \I / \partial \f_{y \neq x}}{p_{y \neq x}}
 \end{equation}
+where in the equation above we replaced the influence $\I$ with it's logarithm.
+The equations which are listed above give rise to some interesting results pertaining to the protection of a Benchmarkers ability to dominate the market.
 
+\subsubsection{Market domination with uncapped qualification}
+
+A Benchmarker $i$'s influence will change with respect to their Challenge factors given by Eqn.~\ref{eq:appendix/final-influence-derivative}
+\begin{equation}
+\sd{\J^i}{\f^i_x} \propto (1 - \f^i_x) \pd{\I^i}{\f^i_x} - \frac{h_x}{h_{y \neq x}} (1 - \f^i_{y \neq x}) \pd{\I}{\f^i_{y \neq x}}
+\end{equation}
+Simply put, the first term on the right side of the equation above represents the influence gained from the share that one solution buys in Challenge $x$, while the second term represents the loss of influence you give up from the share that the same cost would have bought in challenge $y$.
+The term $1 - \f^i_x$ represents the \emph{dilution} of the influence gained as the Benchmarker $i$ begins to dominate a certain challenge $x$.
+As the $\f^i_x \rightarrow 1$, this term falls to 0 and influence gained from additional solutions is diluted down.
+
+The dilution alone provides some protection for the Benchmarking market against domination of a single competitor, even without the addition of an imbalance penalty.
+Suppose that we switch off the imbalance penalty by setting $k=0$, and assume that the unit costs of all challenges $g^i_x$ is equal.
+To put this into a numerical context, let's assume that you initially start with a total of 100 qualifiers in each challenge, and everyone else has a total of 900 in each challenge.
+In this situation it is simple to estimate the challenge factor $\f^i_x = 100/(100 + 900) = 0.1$. 
+Now suppose the Benchmarker has access to a larger compute, and is able to generate more qualifying solutions. The results of this numerical experimental are listed in Table.~\ref{tab:appendix/uncapped-equal-unit-costs}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ccccc}
+		$f_x$ & $\f_x$ & Gain $(1 - \f_x)$ & Loss $(h_x/h_y)(1 - \f_{y \neq x})$ & Estimated $d \J / d \f_x$ \\ 
+		\hline
+		100 & 0.10 & 0.90 & 1.0 \cdot 0.9 = 0.90 & 0\\
+		300 & 0.25 & 0.75 & 1.2 \cdot 0.9 = 1.08 & -0.33 \\
+		900 & 0.50 & 0.50 & 1.8 \cdot 0.9 = 1.62 & -1.12 \\
+       8100 & 0.90 & 0.10 & 9.0 \cdot 0.9 = 8.10 & -8.00
+	\end{tabular}
+	\caption{Change in Benchmarker's influence $i$'s based on no imbalance penalty and fixed unit costs.} 
+	\label{tab:appendix/uncapped-equal-unit-costs}
+\end{table}
+At parity, the derivate is 0, and every qualifier in Challenge $x$ results in a larger loss of influence than gain.
+At 90\%, each solution loses around 8 times as much influence as it gains.
+It is interesting to consider the situation, what happens if we no longer assume that the unit costs of obtaining a qualifying solution is a fixed costs. 
+Suppose that in this situation, a Benchmarker has access to some special optimisation for challenge $x$ only\footnote{An example of this could be that a Benchmarker has access to an ASIC.} which results in the unit costs $g_x$ of Challenge  $x$ being substantially smaller than for the other Challenges.
+To what degree 
 
 
