@@ -47,12 +47,12 @@ A Benchmarkers influence is composed two main factors: the \emph{challenge facto
 \subsection{Challenge factors}
 \label{sec:challenge-factors}
 
-Let $f_x^i$ be the number of \emph{qualifying} solutions submitted by Benchmarker $i$ for a challenge $x$, such that $x\in X$ where $X$ is the set of all challenges currently available.
-For each challenge $x$, there is a set of \emph{challenge tracks} $\tau \in T(x)$, which can vary between challenges. The number of qualifying solutions in a given challenge $f_x^i$ is related to the per track count by a simple summation:
+Let $q_x^i$ be the number of \emph{qualifying} solutions submitted by Benchmarker $i$ for a challenge $x$, such that $x\in X$ where $X$ is the set of all challenges currently available.
+For each challenge $x$, there is a set of \emph{challenge tracks} $\tau \in T(x)$, which can vary between challenges. The number of qualifying solutions in a given challenge $q_x^i$ is related to the per track count by a simple summation:
 \begin{equation}
-    f_x^i = \sum\limits_{\tau \in T(x)}f^i_x(\tau)    
+	q_x^i = \sum\limits_{\tau \in T(x)}q^i_x(\tau)    
 \end{equation}
-where $f^i_x(\tau)$ is the number of qualifying solutions for benchmarker $i$ in a challenge $x$ on track $\tau$.
+where $q^i_x(\tau)$ is the number of qualifying solutions for benchmarker $i$ in a challenge $x$ on track $\tau$.
 Benchmarkers are incentivized to use `legacy' codes over new submissions which offer only very minor improvements. 
 We define the \emph{legacy multiplier} $\mathcal{L}_x(\tau)$ as the a multiplier assigned to each qualifying bundle on each Challenge track, and it is given by  
 \begin{equation}
@@ -78,12 +78,12 @@ For example, if $A(b_1)> A(b_2) = A(b_3)$, then 0.975 and 1.0 are assigned rando
 
 The average legacy multiplier for Benchmarker $i$ on Challenge $x$ and Challenge track $\tau$ is $\bar{\mathcal{L}}^i_x(\tau)$, and is calculated using a simple mean
 \begin{equation}
-    \bar{\mathcal{L}}^i_x(\tau) = \frac{1}{f^i_x}\sum_{j=1}^{f^i_x} \mathcal{L}^j_x(\tau).
+    \bar{\mathcal{L}}^i_x(\tau) = \frac{1}{q^i_x}\sum_{j=1}^{q^i_x} \mathcal{L}^j_x(\tau).
 \end{equation}
 
 For a total of $N_m$, the challenge factor for benchmarker $i$ on challenge $x$ is given by 
 \begin{equation}
-    \f_x^i = \frac{\sum_{\tau\in T(x)} f_x^i(\tau) \bar{\mathcal{L}}_x(\tau)}{\sum_{i=1}^{N_m}\sum_{\tau\in T(x)}f_x^i(\tau)}.
+    \f_x^i = \frac{\sum_{\tau\in T(x)} q_x^i(\tau) \bar{\mathcal{L}}_x(\tau)}{\sum_{i=1}^{N_m}\sum_{\tau\in T(x)}q_x^i(\tau)}.
     \label{eq:challenge-factor-defn}
 \end{equation}
 The age of a code submission is simply the difference between the current round and the round in which the code was submitted. 
@@ -122,12 +122,12 @@ The sum of all factors weights is equal to 1.
 \subsection{Influence}
 \label{sec:influence}
 
-Let $\mathcal{F}^i$ denote the set of all factors $\lbrace f_1^i,\cdots,f_n^i,D^i_{self},D^i_{del}\rbrace$ for a Benchmarker $i$ and a corresponding weight set $\mathcal{W} = \lbrace w_1^f,\cdots,w_n^f,w^D_{self},w^D_{del}\rbrace$ for each of the entries in $\mathcal{F}^i$.
+Let $\mathcal{F}^i$ denote the set of all factors $\lbrace \f_1^i,\cdots,\f_n^i,D^i_{self},D^i_{del}\rbrace$ for a Benchmarker $i$ and a corresponding weight set $\mathcal{W} = \lbrace w_1^f,\cdots,w_n^f,w^D_{self},w^D_{del}\rbrace$ for each of the entries in $\mathcal{F}^i$.
 The size of $\mathcal{F}^i$ is then given by the sum of all challenges and the two deposit factors, i.e $|\mathcal{F}| = n + 2$.  
 We now introduce the mean $\mu^i$ and the variance $(\sigma^i)^2$ of $\mathcal{F}^i$, which is given by the standard weighted mean and variance formulae
 \begin{align}
        \mu^i &= \frac{\sum_{j=1}^{n+2}w_j f_j}{\sum_{j=1}^{n+2}w_j}\\[2pt]
-       (\sigma^i)^2 &= \frac{\sum_{j=1}^{n+2}w_j(f_i - \mu^i)^2 }{\sum_{j=1}^{n+2}w_j}
+       (\sigma^i)^2 &= \frac{\sum_{j=1}^{n+2}w_j(f_j - \mu^i)^2 }{\sum_{j=1}^{n+2}w_j}
 \end{align}
 where $f_j \in \mathcal{F}^i$ and $w_j \in \mathcal{W}$. 
 The equality of all factors $f_j$ is called a \emph{parity}. 
@@ -174,9 +174,9 @@ As a result, code submissions which on average result in the highest bundle qual
 
 The adoption $A_k$ of a code submission $k \in \mathcal{K}$, where $\mathcal{K}$ is the set of all code submissions for some given challenge and block , is given by
 \begin{equation}
-    A_k = \sum_{i=1}^{N_m}\left( \frac{f^i_k}{\sum_{k'\in\mathcal{K}}f^i_{k'}}\right)\mathcal{J}^i
+    A_k = \sum_{i=1}^{N_m}\left( \frac{q^i_k}{\sum_{k'\in\mathcal{K}}q^i_{k'}}\right)\mathcal{J}^i
 \end{equation}
-where similarily to Sec.~\ref{sec:challenge-factors} we have defined $f^i_k$ as the number of qualifying bundles that a Benchmarker $i$ produced with Code submission $k$. 
+where similarily to Sec.~\ref{sec:challenge-factors} we have defined $q^i_k$ as the number of qualifying bundles that a Benchmarker $i$ produced with Code submission $k$. 
 
 As Advance submissions offer a significant improvement to the current state of the art, subsequent code submissions which attempt to improve upon the novel idea introduced by the advance should not be eclipsed by minor improvements. 
 The adoption of an Advance submission $m$ is the sum of all of the adoptions of the Code submissions which reference $m$.
@@ -329,7 +329,7 @@ $$
     \frac{\mathcal{P}_C}{n} - \sum_{m\in M}R_m
 $$
 
-\subsection{Challange Owner Rewards}
+\subsection{Challenge Owner Rewards}
 
 Challenge owners play an integral part in the lifetime of challenges, by steering the direction and difficulty of Challenges to stay competitive with the state-of-the-art algorithms and ensuring alignment with practical application.
 
@@ -337,7 +337,7 @@ Rewards to challenge owners are payable from a pool $\mathcal{P}_{O_w}$:
 \begin{itemize}
     \item A static challenge owner reward pool: Block rewards is assigned as a fixed reward to all Challenge owners.
     \item A dynamic challenge owner reward pool:  A portion of the the block rewards are also set aside as a performance-based reward for challenge owners which are distributed pro-rata based on the number of Recent Advances. 
-    If there are no Recent Advances, this reward is evenly distributed to all Challenge Owners. 
+		If there are no Recent Advances, the dynamic reward is rooted to the bootstrap fund.
 \end{itemize}
 
 Recent Advances are defined as advance submissions which have passed the Advance Rewards vote in the past 15 rounds. 
@@ -355,10 +355,7 @@ If $\sum_j n^j_{adv} \neq 0$, then the dynamic reward is given by
 \begin{equation}
     R^{dyn}_{O_w} = \frac{n^i_{adv}}{\sum_{j}n^j_{adv}} \mathcal{P}_{O_w}(1-r_{stat})
 \end{equation}
-If there are no Recent Advances, the dynamic reward for each Challenge owner $i$ is then 
-\begin{equation}
-    R^{dyn}_{O_w} = \frac{\mathcal{P}_{O_w}}{n}(1-r_{stat})
-\end{equation}
+If there are no Recent Advances, the dynamic reward for each Challenge owner $i$ is then $R^{dyn}_{O_w} = 0$.
 
 \bibliographystyle{plain}
 \bibliography{references}

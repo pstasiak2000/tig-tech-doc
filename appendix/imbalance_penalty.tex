@@ -111,94 +111,94 @@ In this section, we will show that the turning point at which\textbf{c} a change
 
 \subsubsection{Benchmarker's influence gradient}
 
-The derivative of the normalised Benchmarker $i$'s influence $\mathcal{J}^i$ with respect to the change in factor $f^j_x$ is given by
+The derivative of the normalised Benchmarker $i$'s influence $\mathcal{J}^i$ with respect to the change in the number of qualifiers $q^j_x$ is given by
 \begin{equation}
-    \sd{\mathcal{J}^i}{f^j_x} = \sum_{a,b,q,y,z} \pd{\mathcal{J}^i}{\mathcal{I}^a} \pd{\mathcal{I}^a}{\hat{f}_z^b} \pd{\hat{f}_z^b}{f^q_y} \sd{f^q_y}{f^j_x}
+    \sd{\mathcal{J}^i}{q^j_x} = \sum_{a,b,q,y,z} \pd{\mathcal{J}^i}{\mathcal{I}^a} \pd{\mathcal{I}^a}{\f_z^b} \pd{\f_z^b}{q^q_y} \sd{q^q_y}{q^j_x}
 \end{equation}
-subject to the condition that Benchmarker $j$'s total cost $C^j = \sum_z g^j_z f^j_z$ is held constant, where $g^j_z$ is the unit cost for factor $f^j_z$. 
-We now suppose that for Benchmarker $j$, we adjust the value of $f$'s in such a way that the their total cost remains the same. 
+subject to the condition that Benchmarker $j$'s total cost $C^j = \sum_z g^j_z q^j_z$ is held constant, where $g^j_z$ is the unit cost for factor $q^j_z$. 
+We now suppose that for Benchmarker $j$, we adjust the value of $q$'s in such a way that the their total cost remains the same. 
 This in practise is done by removing compute from one Challenge and inserting it into another. 
-Therefore the total rate of change with respect to factor $f_x$ is given by 
+Therefore the total rate of change with respect to $q_x$ is given by 
 \begin{equation}
-    0 = \sd{}{f_x}\sum_z g_z f_z = \sum_z g_z \sd{f_z}{f_x} = g_x + \sum_{z\neq x} g_z \sd{f_z}{f_x},
+    0 = \sd{}{q_x}\sum_z g_z q_z = \sum_z g_z \sd{q_z}{q_x} = g_x + \sum_{z\neq x} g_z \sd{q_z}{q_x},
     \label{eq:appendix/cost-derivative}
 \end{equation}
 where we have dropped the $j$ notation for the Benchmarker. 
-Consider now that the Benchmarker increments $c_x = g_x f_x$ by incrementing $f_x$, and that the corresponding changes in $c_{z\neq x}$ are proportional. 
+Consider now that the Benchmarker increments $c_x = g_x q_x$ by incrementing $q_x$, and that the corresponding changes in $c_{z\neq x}$ are proportional. 
 Then it follows that 
 \begin{equation}
-    \sd{c_z}{c_x} = \sd{(g_z f_z)}{(g_x f_x)} = -q c_z, \quad z \neq x
+    \sd{c_z}{c_x} = \sd{(g_z q_z)}{(g_x q_x)} = -A c_z, \quad z \neq x
 \end{equation}
-where $q$ is a constant of proportionality to be determined. 
+where $A$ is a constant of proportionality to be determined. 
 From the above, we find that
 \begin{equation}
-    g_z \sd{f_z}{f_x} = -q g_x g_z f_z,
+    g_z \sd{q_z}{q_x} = -A g_x g_z q_z,
 \end{equation}
-and substituting into Eqn.~\ref{eq:appendix/cost-derivative} gives the value of $q$:
+and substituting into Eqn.~\ref{eq:appendix/cost-derivative} gives the value of $A$:
 \begin{equation}
-    q = \frac{1}{\sum_{z\neq x} g_z f_z}.
+    A = \frac{1}{\sum_{z\neq x} g_z q_z}.
 \end{equation}
 Therefore, we find that the derivative is determined by
 \begin{equation}
-    \sd{f_z}{f_x} = - \frac{g_x f_z}{\sum_{v \neq x} g_v f_v}, \quad z \neq x
+    \sd{q_z}{q_x} = - \frac{g_x q_z}{\sum_{v \neq x} g_v q_v}, \quad z \neq x
 \end{equation}
 For a general Challenge $y$, the change of one factor with respect to another is given by 
 \begin{align}
-    \sd{f_y}{f_x} &= \pd{f_y}{f_x} + \sum_{v \neq x} \pd{f_y}{f_v} \sd{f_v}{f_x} \\
-    &= \delta_{xy} + \sum_{v\neq x} \delta_{yv} \sd{f_v}{f_x} \\ 
-    &= \delta_{xy} + \sum_z \bar{\delta}_{xv}\delta_{yv}\pd{f_z}{f_x}
+    \sd{q_y}{q_x} &= \pd{q_y}{q_x} + \sum_{v \neq x} \pd{q_y}{q_v} \sd{q_v}{q_x} \\
+    &= \delta_{xy} + \sum_{v\neq x} \delta_{yv} \sd{q_v}{q_x} \\ 
+    &= \delta_{xy} + \sum_z \bar{\delta}_{xv}\delta_{yv}\pd{q_z}{q_x}
 \end{align}
 where $\delta_{xy}$ is the Kronecker delta function, and $\bar{\delta}_{xy} = 1 - \delta_{xy}$. 
 Simplifying, we can show that 
 \begin{equation}
     \label{eq:appendix/deriv_fy_fx}
-    \sd{f_y}{f_x} = \delta_{xy} - \bar{\delta}_{xy} \frac{g_x f_y}{\sum_{v \neq x} g_v f_v}.
+    \sd{q_y}{q_x} = \delta_{xy} - \bar{\delta}_{xy} \frac{g_x q_y}{\sum_{v \neq x} g_v q_v}.
 \end{equation}
 We can now begin with computing the change in influence of Benchmarker $i$. Firstly, we split the derivative using one chain rule definition, which gives
 \begin{equation}
-    \sd{\mathcal{J}^i}{f_x^j} = \sum_{q,y} \pd{\mathcal{J}^i}{f_y^q} \sd{f_y^q}{f_x^j} = \sum_{q,y} \pd{\mathcal{J}i}{f_y^q}\left(\delta_{qj} \sd{f_y^j}{f_x^j}\right)
+    \sd{\mathcal{J}^i}{q_x^j} = \sum_{q,y} \pd{\mathcal{J}^i}{q_y^q} \sd{q_y^q}{q_x^j} = \sum_{q,y} \pd{\mathcal{J}i}{f_y^q}\left(\delta_{qj} \sd{q_y^j}{q_x^j}\right)
 \end{equation}
 Directly subsituting Eqn.~\ref{eq:appendix/deriv_fy_fx} into the equation above and applying the Kronecker delta we can obtain
 \begin{equation}
-\sd{\mathcal{J}^i}{f_x^j} = \sum_y \pd{\mathcal{J}^i}{f_y^j}\left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_y}{\sum_{v\neq x} g^j_v f^j_v}\right)
+\sd{\mathcal{J}^i}{q_x^j} = \sum_y \pd{\mathcal{J}^i}{q_y^j}\left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x q^j_y}{\sum_{v\neq x} g^j_v q^j_v}\right)
 \end{equation}
-The remaining partial derivative can be further expanded by a second use of the chain rule in terms of the normalised challenge factors $\hat{f}_x^j$, such that 
+The remaining partial derivative can be further expanded by a second use of the chain rule in terms of the normalised challenge factors $\f_x^j$, such that 
 \begin{equation}
-    \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y}\pd{\hat{f}^a_y}{f^j_y} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_y}{\sum_{v\neq x} g^j_v f^j_v}\right)
+    \sd{\mathcal{J}^i}{q_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\f^a_y}\pd{\f^a_y}{q^j_y} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x q^j_y}{\sum_{v\neq x} g^j_v q^j_v}\right)
     \label{eq:appendix/influence-deriv-1}
 \end{equation}
 To progress further we neglect the Legacy multiplier factor, which here we set to 1 for all tracks and challenges, and assume a uniform weighting across all challenge factors. 
 As a result, the normalised challenge factors can be written in the simple form 
 \begin{equation}
-    \hat{f}^i_x = \frac{f^i_x}{\sum_j f^j_x}.
+    \f^i_x = \frac{q^i_x}{\sum_j q^j_x}.
 \end{equation}
-Now differentiating the above with respect to challenge factor $f^j_x$, we find that 
+Now differentiating the above with respect to $q^j_x$, we find that 
 \begin{equation}
-    \pd{\hat{f}^i_x}{f^j_x} = \frac{\delta_{ij}}{\sum_k f^k_x} + f^i_x \pd{}{f^j_x}\left(\frac{1}{\sum_k f^k_x}\right) = \frac{\delta_{ij}}{\sum_k f^k_x} - \frac{f^i_x / \sum_k f^k_x}{\sum_k f^k_x} = \frac{\delta_{ij} - \hat{f}^i_x}{\sum_k f^k_x}.
+    \pd{\hat{f}^i_x}{q^j_x} = \frac{\delta_{ij}}{\sum_k q^k_x} + q^i_x \pd{}{q^j_x}\left(\frac{1}{\sum_k q^k_x}\right) = \frac{\delta_{ij}}{\sum_k q^k_x} - \frac{q^i_x / \sum_k q^k_x}{\sum_k q^k_x} = \frac{\delta_{ij} - \f^i_x}{\sum_k q^k_x}.
 \end{equation}
 Now substituting the result above into Eqn.~\ref{eq:appendix/influence-deriv-1} results in the following:
 \begin{equation}
-    \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj} - \hat{f}^a_y}{\sum_k f^k_y} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_y}{\sum_{v\neq x} g^j_v f^j_v}\right)
+    \sd{\mathcal{J}^i}{q_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\f^a_y} \frac{\delta_{aj} - \f^a_y}{\sum_k q^k_y} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x q^j_y}{\sum_{v\neq x} g^j_v q^j_v}\right)
 \end{equation}
 We now make a number of subtle manipulations.
-Firstly, multiply the equation above by $\sum_k f^k_x$, to obtain
+Firstly, multiply the equation above by $\sum_k q^k_x$, to obtain
 \begin{equation}
-    \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj} - \hat{f}^a_y}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_y}{\sum_{v\neq x} g^j_v f^j_v}\right) \frac{\sum_k f^k_x}{\sum_k f^k_y}. 
+    \sd{\mathcal{J}^i}{q_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj} - \hat{f}^a_y}{\sum_k q^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x q^j_y}{\sum_{v\neq x} g^j_v q^j_v}\right) \frac{\sum_k q^k_x}{\sum_k q^k_y}. 
     \label{eq:appendix/influence-deriv-2}
 \end{equation}
 From the definitions of the normalised challenge factors, we can show that 
 \begin{equation}
-    \frac{\sum_k f^k_x}{\sum_k f^k_y} = \frac{f^j_x/\hat{f}^j_x}{f^j_y/\hat{f}^j_y} = \frac{\hat{f}^j_y}{\hat{f}^j_x} \frac{f^j_x}{f^j_y}
+    \frac{\sum_k q^k_x}{\sum_k q^k_y} = \frac{q^j_x/\f^j_x}{q^j_y/\f^j_y} = \frac{\f^j_y}{\f^j_x} \frac{q^j_x}{q^j_y}
 \end{equation}
 Substituting the above into Eqn.~\ref{eq:appendix/influence-deriv-2} gives 
 \begin{equation}
-    \sd{\mathcal{J}^i}{f_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\hat{f}^a_y} \frac{\delta_{aj} - \hat{f}^a_y}{\sum_k f^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x f^j_x}{\sum_{v\neq x} g^j_v f^j_v} \frac{\hat{f}^j_y}{\hat{f}^j_x}\right).  
+    \sd{\mathcal{J}^i}{q_x^j} = \sum_{a,y} \pd{\mathcal{J}^i}{\f^a_y} \frac{\delta_{aj} - \f^a_y}{\sum_k q^k_x} \left(\delta_{xy} - \bar{\delta}_{xy} \frac{g^j_x q^j_x}{\sum_{v\neq x} g^j_v q^j_v} \frac{\f^j_y}{\f^j_x}\right).  
 \end{equation}
-Note here that multiplying $\sum_k f^k_x / \sum_k f^k_y$ factor by the Kronecker delta simply leads to the cancellation of the factor, as this is a unitary operation under summation. 
+Note here that multiplying $\sum_k q^k_x / \sum_k q^k_y$ factor by the Kronecker delta simply leads to the cancellation of the factor, as this is a unitary operation under summation. 
 Once more applying the chain rule to the partial derivative that is left, we obtain:
 \begin{align}
-	\nonumber \sd{\J^i}{f^j_x} &= \frac{1}{\sum_k f^k_x} \sum_{a,y} \delta_{ai} \pd{\J^i}{\I^a}\pd{\I^a}{\f^a}(\delta_{aj} - \f^a_y)\left[\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x}c^j_v} \frac{\f^j_y}{\f^j_x} \right]\\
-							   &= \frac{1}{\sum_k f^k_x} \pd{\J^i}{\I^i}\left\lbrace  \sum_{y} \pd{\I^i}{\f^i_y}(\delta_{ij} - \f^i_y)\left[\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x}c^j_v} \frac{\f^j_y}{\f^j_x}\right] \right\rbrace
+	\nonumber \sd{\J^i}{q^j_x} &= \frac{1}{\sum_k q^k_x} \sum_{a,y} \delta_{ai} \pd{\J^i}{\I^a}\pd{\I^a}{\f^a}(\delta_{aj} - \f^a_y)\left[\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x}c^j_v} \frac{\f^j_y}{\f^j_x} \right]\\
+							   &= \frac{1}{\sum_k q^k_x} \pd{\J^i}{\I^i}\left\lbrace  \sum_{y} \pd{\I^i}{\f^i_y}(\delta_{ij} - \f^i_y)\left[\delta_{xy} - \bar{\delta}_{xy} \frac{c^j_x}{\sum_{v\neq x}c^j_v} \frac{\f^j_y}{\f^j_x}\right] \right\rbrace
 \end{align}
 We now focus on the summation term over Challenges $y$, and splitting this into the contributions where $y=x$ and $y \neq x$, such that 
 \begin{equation}
@@ -213,15 +213,15 @@ Therefore we can simplify the sum in the following way:
 \end{equation}
 Finally, putting it all together and simplifying we arrive at the general derivative result
 \begin{equation}
-	\sd{\J^i}{f^j_x} = \frac{1}{\sum_k f^k_x} \frac{\f^j_{y \neq x}}{\langle c^j_{y \neq x}\rangle } \pd{\J^i}{\I^i}\left[(\delta_{ij} - \f^i_x) \frac{\langle c^j_{y \neq x} \rangle}{\f^j_{y \neq x}} \pd{\I^i}{\f^i_x} - (\delta_{ij} - \f^i_{y \neq x}) \frac{c^j_x}{\f^j_x} \pd{\I^i}{\f^i_{y \neq x}} \right]
+	\sd{\J^i}{q^j_x} = \frac{1}{\sum_k q^k_x} \frac{\f^j_{y \neq x}}{\langle c^j_{y \neq x}\rangle } \pd{\J^i}{\I^i}\left[(\delta_{ij} - \f^i_x) \frac{\langle c^j_{y \neq x} \rangle}{\f^j_{y \neq x}} \pd{\I^i}{\f^i_x} - (\delta_{ij} - \f^i_{y \neq x}) \frac{c^j_x}{\f^j_x} \pd{\I^i}{\f^i_{y \neq x}} \right]
 \end{equation}
 Under the assumption that here $i = j$, it immediately follows that:
 \begin{equation}
-	\sd{\J^i}{f^i_x} = \frac{1}{\sum_k f^k_x} \pd{\J^i}{\I^i}\left[(1 - \f^i_x) \pd{\I^i}{\f^i_x} - (1 - \f^i_{y \neq x}) \frac{c^i_x}{\f^i_x} \frac{\f^i_{y \neq x}}{\langle c^i_{y \neq x}\rangle } \pd{\I^i}{\f^i_{y \neq x}} \right]
+	\sd{\J^i}{q^i_x} = \frac{1}{\sum_k q^k_x} \pd{\J^i}{\I^i}\left[(1 - \f^i_x) \pd{\I^i}{\f^i_x} - (1 - \f^i_{y \neq x}) \frac{c^i_x}{\f^i_x} \frac{\f^i_{y \neq x}}{\langle c^i_{y \neq x}\rangle } \pd{\I^i}{\f^i_{y \neq x}} \right]
 \end{equation}
 We can make a further simplification that
 \begin{equation}
-	\frac{c^i_x}{\hat{f}^i_x} = g^i_x \sum_k f^ := h^i_x	
+	\frac{c^i_x}{\f^i_x} = g^i_x \sum_k q^k := h^i_x	
 \end{equation}
 for both $y=x$ and $y\neq x$ cases (with the latter of course, only holding if the unit costs for all of the $y \neq x$ Challenges .
 Interestingly, $h^i_x$ is a measure of the total cost that a Benchmarker $i$ would have to expend in order to obtain a Challenge factor of unity for Challenge $x$.
@@ -252,7 +252,7 @@ The equations which are listed above give rise to some interesting results perta
 
 A Benchmarker $i$'s influence will change with respect to their Challenge factors given by Eqn.~\ref{eq:appendix/final-influence-derivative}
 \begin{equation}
-\sd{\J^i}{\f^i_x} \propto (1 - \f^i_x) \pd{\I^i}{\f^i_x} - \frac{h_x}{h_{y \neq x}} (1 - \f^i_{y \neq x}) \pd{\I}{\f^i_{y \neq x}}
+\sd{\J^i}{q^i_x} \propto (1 - \f^i_x) \pd{\I^i}{\f^i_x} - \frac{h_x}{h_{y \neq x}} (1 - \f^i_{y \neq x}) \pd{\I}{\f^i_{y \neq x}}
 \end{equation}
 Simply put, the first term on the right side of the equation above represents the influence gained from the share that one solution buys in Challenge $x$, while the second term represents the loss of influence you give up from the share that the same cost would have bought in challenge $y$.
 The term $1 - \f^i_x$ represents the \emph{dilution} of the influence gained as the Benchmarker $i$ begins to dominate a certain challenge $x$.
@@ -267,7 +267,7 @@ Now suppose the Benchmarker has access to a larger compute, and is able to gener
 \begin{table}[h]
 	\centering
 	\begin{tabular}{ccccc}
-		$f_x$ & $\f_x$ & Gain $(1 - \f_x)$ & Loss $(h_x/h_y)(1 - \f_{y \neq x})$ & Estimated $d \J / d \f_x$ \\ 
+		$q_x$ & $\f_x$ & Gain $(1 - \f_x)$ & Loss $(h_x/h_y)(1 - \f_{y \neq x})$ & Estimated $d \J / d \f_x$ \\ 
 		\hline
 		100 & 0.10 & 0.90 & 1.0 \cdot 0.9 = 0.90 & 0\\
 		300 & 0.25 & 0.75 & 1.2 \cdot 0.9 = 1.08 & -0.33 \\
@@ -281,6 +281,5 @@ At parity, the derivate is 0, and every qualifier in Challenge $x$ results in a 
 At 90\%, each solution loses around 8 times as much influence as it gains.
 It is interesting to consider the situation, what happens if we no longer assume that the unit costs of obtaining a qualifying solution is a fixed costs. 
 Suppose that in this situation, a Benchmarker has access to some special optimisation for challenge $x$ only\footnote{An example of this could be that a Benchmarker has access to an ASIC.} which results in the unit costs $g_x$ of Challenge  $x$ being substantially smaller than for the other Challenges.
-To what degree 
 
 
